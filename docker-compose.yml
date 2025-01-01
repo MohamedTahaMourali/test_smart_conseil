@@ -1,0 +1,26 @@
+version: "3.8"
+
+services:
+  scraper:
+    build:
+      context: .
+    environment:
+      - MONGO_URI=mongodb://mongodb:27017/
+      - MONGO_DB=facebook_scraping
+      - MONGO_COLLECTION=posts
+    depends_on:
+      - mongodb
+    command: python scraper.py --username ${USERNAME} --password ${PASSWORD} --query ${QUERY}
+    stdin_open: true
+    tty: true
+
+  mongodb:
+    image: mongodb/mongodb-community-server:latest
+    volumes:
+      - mongodb_data:/data/db
+    ports:
+      - "27017:27017"
+
+volumes:
+  mongodb_data:
+    driver: local
